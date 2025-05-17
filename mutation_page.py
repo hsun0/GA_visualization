@@ -4,14 +4,12 @@ import random
 import matplotlib.pyplot as plt
 def mutation_page():
     # st.set_page_config(page_title="Mutation", layout="wide")
-    st.title("Mutation (Swap & Inversion) 演算法視覺化")
+    st.title("Mutation (Swap & Inversion)")
 
     st.markdown("""
     **Mutation** 是基因演算法中用來增加多樣性的操作，常見於 TSP 的 mutation 包括：
     - **Swap Mutation**：隨機選兩個位置交換。
     - **Inversion Mutation**：隨機選一段區間反轉。
-
-    下方互動式範例展示 mutation 的過程：
     """)
 
     st.subheader("Mutation Demo")
