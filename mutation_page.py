@@ -42,12 +42,12 @@ def mutation_page():
             def highlight_swap(val, col):
                 if col == 'Child':
                     if val == child[i] or val == child[j]:
-                        return 'background-color: #FFFF00'  # 黃色
+                        return 'background-color: #808080'  # 灰色
                 return ''
             def style_swap(s):
                 return [highlight_swap(v, s.name) for v in s]
             st.dataframe(df_mut.style.apply(style_swap, axis=0))
-            st.info("黃色為交換的兩個位置")
+            st.info("灰色為交換的兩個位置")
 
     elif mutation_type == "Inversion":
         idx = st.slider("選擇反轉區間 (start, end)", 0, size-1, (2, 5))
@@ -60,15 +60,9 @@ def mutation_page():
                 if col == 'Child':
                     for k, v in enumerate(child):
                         if v == val and start <= k <= end:
-                            return 'background-color: #FFD700'  # 黃色
+                            return 'background-color: #808080'  # 黃色
                 return ''
             def style_inv(s):
                 return [highlight_inv(v, s.name) for v in s]
             st.dataframe(df_mut.style.apply(style_inv, axis=0))
-            fig, ax = plt.subplots(figsize=(8,1))
-            ax.axis('off')
-            for k, val in enumerate(child):
-                color = '#FFD700' if start <= k <= end else '#87CEEB'
-                ax.text(k, 0, str(val), fontsize=18, ha='center', va='center', bbox=dict(facecolor=color, edgecolor='k'))
-            st.pyplot(fig)
-            st.info("黃色為反轉區間")
+            st.info("灰色為反轉區間")

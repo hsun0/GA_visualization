@@ -61,11 +61,11 @@ def crossover_page():
                     if v == val:
                         source = child_source[i]
                         if source == 'p1':
-                            return 'background-color: #ffa500'
+                            return 'background-color: #808080'
                         elif source == 'p2':
-                            return 'background-color: #0000cd'
+                            return 'background-color: #000000'
             return ''
         def style_child(s):
             return [highlight_child(v, s.name) for v in s]
         st.dataframe(df_child.style.apply(style_child, axis=0))
-        st.info("表格顯示每個位置的基因來源，黃色來自 Parent 1，藍色來自 Parent 2（順序保留且不重複）")
+        st.info("灰色來自於parent 1，黑色來自於parent 2")
