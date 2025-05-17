@@ -14,10 +14,10 @@ st.title("GA for TSP")
 # Sidebar controls
 with st.sidebar:
     st.header("⚙️ Parameters")
-    city_source = st.radio("City Source", ["Random", "From File", "Draw by Hand"])
+    city_source = st.radio("City Source", ["Random", "Default Graph", "Draw by Hand"])
     if city_source == "Random":
         num_cities = st.slider("Number of Cities", 5, 30, 15)
-    elif city_source == "From File":
+    elif city_source == "Default Graph":
         import os
         tsp_files = [f for f in os.listdir("problems") if f.endswith(".tsp")]
         tsp_file = st.selectbox("Select TSP File", tsp_files)
@@ -32,7 +32,7 @@ with st.sidebar:
 # --- Main App ---
 if city_source == "Random":
     cities = np.random.rand(num_cities, 2) * 100
-elif city_source == "From File":
+elif city_source == "Default Graph":
     def load_tsp_file(filepath):
         coords = []
         with open(filepath, 'r') as f:
