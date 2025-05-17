@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 from GA import GA
 from GA import Chromosome
 import pandas as pd
+import random as rd
 
 # --- Streamlit UI ---
 st.set_page_config(page_title="GA Solves TSP", layout="wide")
-st.title("🚀 Genetic Algorithm for Traveling Salesman Problem")
+st.title("GA for TSP")
 
 # Sidebar controls
 with st.sidebar:
@@ -57,34 +58,35 @@ if run:
     best_dists = []
     best_path = None
     route_chart = st.empty()
+
+    ###### GA run loop ######
+    ga.evaluation()
+    best_dists.append(ga.chromosomes[0].fitness)
     for gen in range(generations):
-        ga.evaluation()
-        ga.chromosomes.sort(key=lambda c: c.fitness)
-        best_dists.append(ga.chromosomes[0].fitness)
-        # Elitism: 保留最優個體
         new_population = [Chromosome(ga.chromosomes[i].genes.copy()) for i in range(ga.elitismNum)]
         while len(new_population) < ga.populationSize:
             p1 = ga.select()
             p2 = ga.select()
             child = ga.crossover(p1, p2)
             ga.mutate(child)
-            new_population.append(child)
+            if rd.random() < 0.01:
+                ga.local_search_2opt(child)
+            new_population.append(child) 
         ga.chromosomes = new_population
         ga.evaluation()
+        best_dists.append(ga.chromosomes[0].fitness)
         best_path = ga.chromosomes[0].genes
+
         # 動態顯示路線
         fig, ax = plt.subplots()
         coords = cities[best_path + [best_path[0]]]
         ax.plot(coords[:, 0], coords[:, 1], '-o')
-        for i, (x, y) in enumerate(cities):
-            ax.text(x, y, str(i), fontsize=8)
-        ax.set_title(f"Generation {gen+1}")
+        ax.set_title(f"Generation {gen+1} | Best distance: {ga.chromosomes[0].fitness:.2f}")
         route_chart.pyplot(fig)
         progress_bar.progress((gen+1)/generations, text=f"Generation {gen+1}/{generations}")
-    # 最後再做一次評估，確保結果正確
-    ga.evaluation()
-    ga.chromosomes.sort(key=lambda c: c.fitness)
+
     best_path = ga.chromosomes[0].genes
+    ###### GA run loop end ######
 
     st.subheader("Best distances table")
     st.dataframe(pd.DataFrame({"Generation": list(range(1, len(best_dists)+1)), "Best Distance": best_dists}))

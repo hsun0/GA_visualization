@@ -20,7 +20,7 @@ class GA:
         self.mutationRate = mutation_rate
         self.num_cities = len(cities)
         self.elitismRate = 0.01
-        self.elitismNum = min(1, int(self.populationSize * self.elitismRate))
+        self.elitismNum = max(1, int(self.populationSize * self.elitismRate))
         # self.elitismNum = 2
         # 初始化距離矩陣
         self.distMat = np.zeros((self.num_cities, self.num_cities))
@@ -67,10 +67,11 @@ class GA:
         individual.genes[start:end + 1] = list(reversed(individual.genes[start:end + 1]))
 
 
-    def local_search_2opt(self, individual: Chromosome):
-        # 簡單 2-opt local search，嘗試改善路徑
+    def local_search_2opt(self, individual: Chromosome, max_iter: int = 1):
+        # 簡單 2-opt local search，嘗試改善路徑，最多 max_iter 次
         improved = True
-        while improved:
+        iter_count = 0
+        while improved and iter_count < max_iter:
             improved = False
             for i in range(1, self.num_cities - 2):
                 for j in range(i + 1, self.num_cities):
@@ -89,21 +90,23 @@ class GA:
                         break
                 if improved:
                     break
+            iter_count += 1
 
     def run(self):
         best_dists = []
         for _ in range(self.generations):
             self.evaluation()
+
+            # selection and mutation
             new_population = [Chromosome(self.chromosomes[i].genes.copy()) for i in range(self.elitismNum)]
             while len(new_population) < self.populationSize:
                 p1 = self.select()
                 p2 = self.select()
                 child = self.crossover(p1, p2)
                 self.mutate(child)
-                self.evaluation()  # 先算 fitness
-                # self.local_search_2opt(child)  # 交配後加強
                 new_population.append(child)
             self.chromosomes = new_population
+
             self.evaluation()
             best_dists.append(self.chromosomes[0].fitness)
         best_path = self.chromosomes[0].genes
