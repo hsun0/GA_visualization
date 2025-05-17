@@ -14,13 +14,15 @@ st.title("GA for TSP")
 # Sidebar controls
 with st.sidebar:
     st.header("⚙️ Parameters")
-    city_source = st.radio("City Source", ["Random", "From File"])
+    city_source = st.radio("City Source", ["Random", "From File", "Draw by Hand"])
     if city_source == "Random":
         num_cities = st.slider("Number of Cities", 5, 30, 15)
-    else:
+    elif city_source == "From File":
         import os
         tsp_files = [f for f in os.listdir("problems") if f.endswith(".tsp")]
         tsp_file = st.selectbox("Select TSP File", tsp_files)
+    elif city_source == "Draw by Hand":
+        st.info("請在下方畫布上點擊新增城市座標。")
     popSize = st.slider("Population Size", 10, 300, 50)
     generations = st.slider("Number of Generations", 1, 1000, 100)
     crossoverRate = st.slider("Crossover Rate", 0.5, 1.0, 0.5)
@@ -48,6 +50,37 @@ elif city_source == "From File":
                         continue
         return np.array(coords)
     cities = load_tsp_file(f"problems/{tsp_file}")
+elif city_source == "Draw by Hand":
+    st.markdown(
+        '''
+        <style>
+        .st-canvas-toolbar button {
+            background-color: green !important;
+            color: white !important;
+            border: 1px solid #ccc !important;
+        }
+        </style>
+        ''',
+        unsafe_allow_html=True
+    )
+    st.subheader("🖊️ Draw Cities (Click to add points)")
+    import streamlit_drawable_canvas as dc
+    canvas_result = dc.st_canvas(
+        fill_color="rgba(0, 0, 0, 1)",  # 黑色點
+        stroke_width=2,
+        background_color="#fff",  # 白色背景
+        update_streamlit=True,
+        height=400,
+        width=400,
+        drawing_mode="point",
+        point_display_radius=5,
+        key="canvas"
+    )
+    if canvas_result.json_data and "objects" in canvas_result.json_data:
+        points = [[obj["left"], obj["top"]] for obj in canvas_result.json_data["objects"] if obj["type"] == "circle"]
+        cities = np.array([[x, 400-y] for x, y in points])
+    else:
+        cities = np.empty((0, 2))
 else:
     cities = np.random.rand(10, 2) * 100  # fallback
 
