@@ -10,6 +10,8 @@ def GA_TSP_page():
     st.title("GA for TSP")
     # Sidebar controls
     with st.sidebar:
+        st.header("🔡 Methods")
+        st.info("Crossover: Order Crossover (OX)\nMutation: Inversion")
         st.header("⚙️ Parameters")
         city_source = st.radio("City Source", ["Random", "Default Graph", "Draw by Hand"])
         if city_source == "Random":
@@ -19,7 +21,7 @@ def GA_TSP_page():
             tsp_files = [f for f in os.listdir("problems") if f.endswith(".tsp")]
             tsp_file = st.selectbox("Select TSP File", tsp_files)
         elif city_source == "Draw by Hand":
-            st.info("請在下方畫布上點擊新增城市座標。")
+            st.info("Please click to add points on the canvas.")
         popSize = st.slider("Population Size", 10, 300, 50)
         generations = st.slider("Number of Generations", 1, 1000, 100)
         crossoverRate = st.slider("Crossover Rate", 0.5, 1.0, 0.5)
@@ -110,6 +112,9 @@ def GA_TSP_page():
             fig, ax = plt.subplots()
             coords = cities[best_path + [best_path[0]]]
             ax.plot(coords[:, 0], coords[:, 1], '-o')
+            # 若是 tw*.tsp，x/y 軸比例設為一樣
+            if city_source == "Default Graph" and tsp_file.startswith("tw"):
+                ax.set_aspect('equal', adjustable='datalim')
             ax.set_title(f"Generation {gen+1} | Best distance: {ga.chromosomes[0].fitness:.2f}")
             route_chart.pyplot(fig)
             progress_bar.progress((gen+1)/generations, text=f"Generation {gen+1}/{generations}")
@@ -127,4 +132,4 @@ def GA_TSP_page():
         ax2.set_ylabel("Distance")
         st.pyplot(fig2)
     else:
-        st.info("請從左側選擇參數後按下 [Run Simulation] 開始。")
+        st.info("Please select parameters from the sidebar and click [Run Simulation] to start.")

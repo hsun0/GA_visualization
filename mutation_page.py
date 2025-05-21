@@ -7,19 +7,19 @@ def mutation_page():
     st.title("Mutation (Swap & Inversion)")
 
     st.markdown("""
-    **Mutation** 是基因演算法中用來增加多樣性的操作，常見於 TSP 的 mutation 包括：
-    - **Swap Mutation**：隨機選兩個位置交換。
-    - **Inversion Mutation**：隨機選一段區間反轉。
+    **Mutation** is an operation in genetic algorithms used to increase diversity. Common mutations for TSP include:
+    - **Swap Mutation**: Randomly select and swap two positions.
+    - **Inversion Mutation**: Randomly select a segment and reverse it.
     """)
 
     st.subheader("Mutation Demo")
 
     # 產生隨機 permutation
-    size = st.slider("基因長度", 5, 20, 8)
+    size = st.slider("Gene length", 5, 20, 8)
     if 'mutation_perm' not in st.session_state:
         st.session_state['mutation_perm'] = list(range(1, size+1))
 
-    if st.button("產生隨機 Parent permutation"):
+    if st.button("Generate random Parent permutation"):
         perm = list(range(1, size+1))
         random.shuffle(perm)
         st.session_state['mutation_perm'] = perm
@@ -28,11 +28,11 @@ def mutation_page():
     df = pd.DataFrame({'Parent': parent})
     st.dataframe(df, use_container_width=True)
 
-    mutation_type = st.radio("選擇 Mutation 類型", ["Swap", "Inversion"])
+    mutation_type = st.radio("Choose Mutation Type", ["Swap", "Inversion"])
 
     if mutation_type == "Swap":
-        idx = st.slider("選擇交換的兩個位置", 0, size-1, (1, 5))
-        if st.button("執行 Swap Mutation"):
+        idx = st.slider("Select two positions to swap", 0, size-1, (1, 5))
+        if st.button("Excute Swap Mutation"):
             child = parent.copy()
             i, j = idx
             child[i], child[j] = child[j], child[i]
@@ -45,11 +45,11 @@ def mutation_page():
             def style_swap(s):
                 return [highlight_swap(v, s.name) for v in s]
             st.dataframe(df_mut.style.apply(style_swap, axis=0))
-            st.info("灰色為交換的兩個位置")
+            st.info("Gray indicates the two swapped positions")
 
     elif mutation_type == "Inversion":
-        idx = st.slider("選擇反轉區間 (start, end)", 0, size-1, (2, 5))
-        if st.button("執行 Inversion Mutation"):
+        idx = st.slider("Select inversion segment (start, end)", 0, size-1, (2, 5))
+        if st.button("Excute Inversion Mutation"):
             child = parent.copy()
             start, end = idx
             child[start:end+1] = list(reversed(child[start:end+1]))
@@ -63,4 +63,4 @@ def mutation_page():
             def style_inv(s):
                 return [highlight_inv(v, s.name) for v in s]
             st.dataframe(df_mut.style.apply(style_inv, axis=0))
-            st.info("灰色為反轉區間")
+            st.info("Gray indicates the inverted segment")
