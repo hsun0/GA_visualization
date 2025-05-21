@@ -9,7 +9,7 @@ run:
 ```
 streamlit run main.py
 ```
-or use this link
+or use this link (However, using this link for simulation will run more slowly.)
 https://hsun0-ga-visualization-main-pro6oa.streamlit.app/
 
 
