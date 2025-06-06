@@ -19,13 +19,13 @@ def mutation_page():
     if 'mutation_perm' not in st.session_state:
         st.session_state['mutation_perm'] = list(range(1, size+1))
 
-    if st.button("Generate random Parent permutation"):
+    if st.button("Generate random permutation"):
         perm = list(range(1, size+1))
         random.shuffle(perm)
         st.session_state['mutation_perm'] = perm
 
     parent = st.session_state['mutation_perm']
-    df = pd.DataFrame({'Parent': parent})
+    df = pd.DataFrame({'Before': parent})
     st.dataframe(df, use_container_width=True)
 
     mutation_type = st.radio("Choose Mutation Type", ["Swap", "Inversion"])
@@ -36,9 +36,9 @@ def mutation_page():
             child = parent.copy()
             i, j = idx
             child[i], child[j] = child[j], child[i]
-            df_mut = pd.DataFrame({'Parent': parent, 'Child': child})
+            df_mut = pd.DataFrame({'Before': parent, 'After': child})
             def highlight_swap(val, col):
-                if col == 'Child':
+                if col == 'After':
                     if val == child[i] or val == child[j]:
                         return 'background-color: #808080'  # 灰色
                 return ''
@@ -53,7 +53,7 @@ def mutation_page():
             child = parent.copy()
             start, end = idx
             child[start:end+1] = list(reversed(child[start:end+1]))
-            df_mut = pd.DataFrame({'Parent': parent, 'Child': child})
+            df_mut = pd.DataFrame({'Before': parent, 'After': child})
             def highlight_inv(val, col):
                 if col == 'Child':
                     for k, v in enumerate(child):
