@@ -109,7 +109,7 @@ def GA_TSP_page():
             best_path = ga.chromosomes[0].genes
 
             # 動態顯示路線
-            fig, ax = plt.subplots()
+            fig, ax = plt.subplots(figsize=(6, 4))
             coords = cities[best_path + [best_path[0]]]
             ax.plot(coords[:, 0], coords[:, 1], '-o')
             # 若是 tw*.tsp，x/y 軸比例設為一樣
