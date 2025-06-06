@@ -7,6 +7,23 @@ from mutation_page import mutation_page
 from TSP import TSP_page
 st.set_page_config(page_title="GA Solves TSP", layout="wide")
 
+# 設定深色模式 CSS
+st.markdown("""
+<style>
+.stApp {
+    background-color: #0E1117;
+    color: #FAFAFA;
+}
+.stSidebar {
+    background-color: #262730;
+}
+.stSelectbox > div > div {
+    background-color: #262730;
+    color: #FAFAFA;
+}
+</style>
+""", unsafe_allow_html=True)
+
 # 新增一個頁面選單
 page = st.sidebar.selectbox("Page", ["Home", "TSP", "Crossover", "Mutation", "GA for TSP"])
 
