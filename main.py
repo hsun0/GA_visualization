@@ -8,7 +8,7 @@ from TSP import TSP_page
 st.set_page_config(page_title="GA Solves TSP", layout="wide")
 
 # 新增一個頁面選單
-page = st.sidebar.selectbox("Page", ["Home", "TSP", "GA for TSP", "Crossover", "Mutation"])
+page = st.sidebar.selectbox("Page", ["Home", "TSP", "Crossover", "Mutation", "GA for TSP"])
 
 if page == "Home":
     home_page()
